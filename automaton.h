@@ -8,23 +8,26 @@
 
 class Automaton {
 private:
-	Automaton();
+	Automaton(std::string name);
 
-
+	std::string name;
 	std::vector<std::string> vStates;
 	std::vector<bool> vFinal;
 	std::vector<std::string> vSymbols;
-	std::vector< std::vector< std::list < int > > > mTransitions;
+	std::vector< std::vector< std::list < int > > > mSymbolTransitions;
+	std::vector< std::vector< std::list < int > > > mSubmachineTransitions;
 
 	void addState(std::string state, bool isFinal);
 	void addSymbol(std::string symbol); 
+	void addSymbolTransition(std::string stateFrom, std::string symbol, std::string stateTo);
+	void addSubmachineTransition(std::string stateFrom, std::string machine, std::string stateTo);
 
 	int findStateId(std::string state);
 	int findSymbolId(std::string symbol);
 
 	void readStatesFromFile(std::istream & readFile);
 	void readSymbolsFromFile(std::istream & readFile);
-	void readTransitionsFromFile(std::istream & readFile);
+	int readTransitionsFromFile(std::istream & readFile);
 
 	void copyOutgoingTransitions(int stateIdFrom, int stateIdTo);
 	void removeIncomingEmptyTransitions(int stateId);
@@ -35,12 +38,11 @@ private:
 	int getNSymbols();
 
 public:
-	Automaton(std::istream & readFile);
+	Automaton(std::string name, std::istream & readFile);
 	void printTransitionsTable(std::ostream & output);
 
 	int testString(const std::string & string);
 
-	Automaton * getDeterministic();
 };
 
 #endif //__AUTOMATON_H__
